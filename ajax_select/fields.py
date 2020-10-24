@@ -11,7 +11,6 @@ from django.template.defaultfilters import force_escape
 from django.template.loader import render_to_string
 from django.utils.encoding import force_text
 from django.utils.safestring import mark_safe
-from django.utils.six import text_type
 from django.utils.translation import ugettext as _
 from django.utils.module_loading import import_string
 
@@ -168,7 +167,7 @@ class AutoCompleteSelectField(forms.fields.CharField):
         # 1 vs u'1'
         initial_value = initial if initial is not None else ''
         data_value = data if data is not None else ''
-        return text_type(initial_value) != text_type(data_value)
+        return str(initial_value) != str(data_value)
 
 
 ###############################################################################
@@ -281,7 +280,7 @@ class AutoCompleteSelectMultipleField(forms.fields.CharField):
             # explicit help text it appends this other default text onto the end.
             # This monkey patches the help text to remove that
             if help_text != '':
-                if not isinstance(help_text, text_type):
+                if not isinstance(help_text, str):
                     # ideally this could check request.LANGUAGE_CODE
                     translated = help_text.translate(settings.LANGUAGE_CODE)
                 else:
@@ -327,8 +326,8 @@ class AutoCompleteSelectMultipleField(forms.fields.CharField):
 
     def has_changed(self, initial_value, data_value):
         # [1, 2] vs [u'1', u'2']
-        ivs = [text_type(v) for v in (initial_value or [])]
-        dvs = [text_type(v) for v in (data_value or [])]
+        ivs = [str(v) for v in (initial_value or [])]
+        dvs = [str(v) for v in (data_value or [])]
         return ivs != dvs
 
 ###############################################################################

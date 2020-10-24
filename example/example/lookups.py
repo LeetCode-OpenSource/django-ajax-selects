@@ -1,5 +1,4 @@
 from __future__ import unicode_literals
-from django.utils.six import text_type
 from django.db.models import Q
 from django.utils.html import escape
 from example.models import Person, Group, Song
@@ -36,7 +35,7 @@ class GroupLookup(LookupChannel):
         return Group.objects.filter(name__icontains=q).order_by('name')
 
     def get_result(self, obj):
-        return text_type(obj)
+        return str(obj)
 
     def format_match(self, obj):
         return self.format_item_display(obj)
@@ -60,7 +59,7 @@ class SongLookup(LookupChannel):
         return Song.objects.filter(title__icontains=q).select_related('group').order_by('title')
 
     def get_result(self, obj):
-        return text_type(obj.title)
+        return str(obj.title)
 
     def format_match(self, obj):
         return self.format_item_display(obj)
